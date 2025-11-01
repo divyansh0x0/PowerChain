@@ -36,13 +36,13 @@ async function connect(){
   const data = await res.json();
   console.log("Connected",data);
 }
-fetchAllData();
+
 
 </script>
 <template>
     <main>
       <PowerMap class="odd-section" />
-      <button v-on:click="connect">Fetch</button>
+      <button v-on:click="fetchAllData">Fetch</button>
     </main>
 </template>
 <style scoped>

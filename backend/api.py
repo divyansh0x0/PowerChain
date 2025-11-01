@@ -10,33 +10,46 @@ import os
 from web3 import Web3
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
+# Load environment variables
 load_dotenv()
 
-MONGODB_URL = quote_plus(os.getenv("MONGODB_URL"))
-client = MongoClient()
+# ✅ Correct MongoDB client connection
+MONGODB_URL = os.getenv("MONGODB_URL")
+if not MONGODB_URL:
+    raise ValueError("Missing MONGODB_URL in environment variables")
+
+client = MongoClient(MONGODB_URL)
 db = client["power_grid"]
 collection = db["IOTs"]
-api = FastAPI()
-INFURA_URL = os.getenv("INFURA_URL")  # e.g. https://sepolia.infura.io/v3/YOUR_PROJECT_ID
-PRIVATE_KEY = os.getenv("PRIVATE_KEY")  # Your wallet private key
-SENDER_ADDRESS = os.getenv("PUBLIC_ADDRESS")  # Your wallet address
-# Allow specific origins (your frontend URL)
-origins = ["*"]
 
+api = FastAPI()
+
+# ✅ Blockchain setup
+INFURA_URL = os.getenv("INFURA_URL")
+PRIVATE_KEY = os.getenv("PRIVATE_KEY")
+SENDER_ADDRESS = os.getenv("PUBLIC_ADDRESS")
+
+if not INFURA_URL or not PRIVATE_KEY or not SENDER_ADDRESS:
+    raise ValueError("Missing blockchain credentials in environment variables")
+
+w3 = Web3(Web3.HTTPProvider(INFURA_URL))
+
+if not w3.is_connected():
+    raise RuntimeError("❌ Could not connect to Web3")
+else:
+    print("✅ Connected to WEB3")
+
+# ✅ Allow frontend access
 api.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,          # or ["*"] for testing
+    allow_origins=["*"],  # Replace with specific domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-w3 = Web3(Web3.HTTPProvider(INFURA_URL))
 
-if not w3.is_connected():
-    raise RuntimeError("Could not connect to Web3")
-else:
-    print("connected to WEB3")
 
+# -------------------- MODELS --------------------
 class PowerData(BaseModel):
     iot_id: str
     recorded_at: datetime
@@ -52,9 +65,10 @@ class TransactionData(BaseModel):
     power_data: PowerData
     transaction_id: str
     blockchain_hash: str
-    verified_on_chain_at:datetime
+    verified_on_chain_at: datetime
 
 
+# -------------------- BLOCKCHAIN FUNCTION --------------------
 def makeTransaction(power_data: PowerData) -> TransactionData:
     # 1️⃣ Create SHA-256 hash of the power data
     data_str = json.dumps(power_data.model_dump(), sort_keys=True)
@@ -64,47 +78,49 @@ def makeTransaction(power_data: PowerData) -> TransactionData:
     # 2️⃣ Create transaction
     nonce = w3.eth.get_transaction_count(SENDER_ADDRESS)
     tx = {
-        "to": None,  # No recipient — data-only tx
+        "to": SENDER_ADDRESS,  # send to self for data logging
         "value": 0,
-        "gas": 54028 + len(data_hash) * 10,
+        "gas": 60000,
         "gasPrice": w3.to_wei("5", "gwei"),
         "nonce": nonce,
         "data": w3.to_hex(text=data_hash),
-        "chainId": 11155111  # Sepolia Chain ID
+        "chainId": 11155111,  # Sepolia testnet
     }
 
     # 3️⃣ Sign and send transaction
     signed_tx = w3.eth.account.sign_transaction(tx, PRIVATE_KEY)
     tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-
     print(f"✅ Transaction sent: {w3.to_hex(tx_hash)}")
 
-    # 4️⃣ Return TransactionData object
+    # 4️⃣ Return transaction details
     return TransactionData(
         power_data=power_data,
         transaction_id=w3.to_hex(tx_hash),
         blockchain_hash=data_hex,
-        verified_on_chain_at=datetime.now()
+        verified_on_chain_at=datetime.now(),
     )
+
+
+# -------------------- ROUTES --------------------
+@api.get("/")
+def hello_msg():
+    print("Getting all data")
+    get_power_data();
+    return {"data": "Welcome to decentralized power tracking"}
 
 
 @api.post("/power-data/")
 def add_power_data(data: PowerData):
     transaction_data = makeTransaction(data)
     result = collection.insert_one(transaction_data.model_dump())
-    return {"id": str(result.inserted_id), "message": "Data inserted successfully"}
-
-
-@api.get("/")
-def hello_msg():
-    return {"data": "Welcome to decentralized power tracking"}
+    return {"id": str(result.inserted_id), "transaction_id": transaction_data.transaction_id}
 
 
 @api.get("/power-data/")
 def get_power_data(
     txid: str | None = Query(None),
     iotid: str | None = Query(None),
-    pincode: str | None = Query(None),
+    pincode: int | None = Query(None),
 ):
     query = {}
     if txid:
@@ -112,10 +128,14 @@ def get_power_data(
     if iotid:
         query["power_data.iot_id"] = iotid
     if pincode:
-        query["power_data.pincode"] = int(pincode)
+        query["power_data.pincode"] = pincode
 
-    docs = list(collection.find(query, {"_id": 0}))
+    docs = list(collection.find(query))
     if not docs:
         raise HTTPException(status_code=404, detail="No matching data found")
+
+    # Convert ObjectId to string for JSON serialization
+    for doc in docs:
+        doc["_id"] = str(doc["_id"])
 
     return {"count": len(docs), "data": docs}
