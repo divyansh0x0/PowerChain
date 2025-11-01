@@ -42,7 +42,7 @@ async function connect(){
 <template>
     <main>
       <PowerMap class="odd-section" />
-      <button v-on:click="fetchAllData">Fetch</button>
+      <button v-on:click="connect">Fetch</button>
     </main>
 </template>
 <style scoped>
