@@ -76,12 +76,12 @@ def make_transaction(power_data: PowerData) -> TransactionData:
     print(data_str)
 
     # 2️⃣ Create transaction
-    nonce = w3.eth.get_transaction_count(SENDER_ADDRESS)
+    nonce = w3.eth.get_transaction_count(SENDER_ADDRESS, 'pending')
     tx = {
         "to": None,  # No recipient — data-only tx
         "value": 0,
         "gas": 54028 + len(data_hash) * 10,
-        "gasPrice": w3.to_wei("5", "gwei"),
+        "gasPrice": int(w3.eth.gas_price * 1.2),
         "nonce": nonce,
         "data": w3.to_hex(text=data_hash),
         "chainId": 11155111  # Sepolia Chain ID
