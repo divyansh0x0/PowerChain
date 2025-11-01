@@ -1,0 +1,32 @@
+type Theme = "light"|"dark";
+function updateTheme(theme:Theme){
+    document.documentElement.setAttribute("theme",theme);
+}
+export function useThemeManager(){
+    const theme = ref<Theme>('light');
+    if (import.meta.client) {
+        const saved = localStorage.getItem('theme') as Theme | null
+        if (saved === 'light' || saved === 'dark') {
+            theme.value = saved
+        }
+        else{
+            if(window.matchMedia){
+                const match_media_color_scheme = window.matchMedia('(prefers-color-scheme: dark)')
+                const isDark = match_media_color_scheme.matches;
+                updateTheme(isDark ? "dark":"light");
+                match_media_color_scheme.addEventListener("change",()=>{
+                    updateTheme(match_media_color_scheme.matches ? "dark" : "light");
+                })
+            }
+        }
+        updateTheme(theme.value);
+    }
+    const setTheme = (newTheme:Theme) =>{
+        theme.value = newTheme;
+        if(import.meta.client){
+            updateTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+    }
+    return {theme, setTheme};
+}

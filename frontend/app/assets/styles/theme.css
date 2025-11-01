@@ -1,0 +1,122 @@
+:root {
+    /* Common static variables */
+    --border-radius:10px;
+    --border-radius-sm: 0.5em;
+    --border-radius-md: 2em;
+    --border-radius-lg: 4em;
+    --border-radius-circle: 99999px;
+
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition-speed: 0.3s;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 30px;
+    /* Padding */
+    --padding-sm: 0.5em;
+    --padding-md: 1em;
+    --padding-lg: 1.5em;
+
+    /* Base accent color */
+    --color-accent: #2962FF; /* Blue 800 */
+}
+
+/* Light Theme */
+[theme="light"] {
+    /* Primary & Secondary */
+    --color-primary: rgb(65 95 145);
+    --color-surface-tint: rgb(65 95 145);
+    --color-secondary: rgb(86 94 113);
+    --color-tertiary: rgb(112 85 117);
+    --color-error: rgb(186 26 26);
+
+    /* Containers */
+    --color-primary-container: rgb(215 227 255);
+    --color-secondary-container: rgb(218 226 249);
+    --color-tertiary-container: rgb(250 216 253);
+    --color-error-container: rgb(255 218 214);
+    --color-primary-container-variant: rgb(200, 217, 255);
+
+    /* Background & Surface */
+    --color-background: rgb(249 249 255);
+    --color-surface: rgb(249 249 255);
+    --color-surface-variant: #F1F3F4;
+    --color-surface-container-lowest: rgb(255 255 255);
+    --color-surface-container-low: rgb(243 243 250);
+    --color-surface-container: rgb(237 237 244);
+    --color-surface-container-high: rgb(231 232 238);
+    --color-surface-container-highest: rgb(226 226 233);
+
+    /* Text Colors */
+    --color-on-primary-container: rgb(40 71 119);
+    --color-on-secondary: rgb(255 255 255);
+    --color-on-secondary-container: rgb(62 71 89);
+    --color-on-tertiary: rgb(255 255 255);
+    --color-on-tertiary-container: rgb(87 62 92);
+    --color-on-error: rgb(255 255 255);
+    --color-on-error-container: rgb(147 0 10);
+    --color-on-surface-variant: rgb(68 71 78);
+
+
+    --color-on-surface: rgb(25 28 32);
+    /* Border & Shadow */
+    --color-border: #E0E0E0;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Hover / Active states */
+    --color-hover: #0039CB;
+    --color-focus: #2962FF;
+
+    /** Translucent overlay colors */
+    --color-overlay-container: rgba(0, 0, 0, 0.07);
+}
+
+[theme="dark"] {
+    /* Primary & Secondary */
+    --color-primary: rgb(170 199 255);
+    --color-secondary: rgb(190 198 220);
+    --color-tertiary: rgb(221 188 224);
+    --color-error: rgb(255 180 171);
+    /* Containers */
+    --color-primary-container: rgb(33, 41, 89);
+    --color-secondary-container: rgb(62 71 89);
+    --color-tertiary-container: rgb(87 62 92);
+    --color-error-container: rgb(147 0 10);
+    --color-primary-container-variant: rgb(43, 53, 117);
+    /* Background & Surface */
+    --color-background: rgb(10, 12, 15);
+    --color-surface: rgb(28, 28, 30);
+    --color-surface-variant: #2C2C2C;
+    --color-surface-container-lowest: rgb(21, 21, 25);
+    --color-surface-container-low: rgb(25 28 32);
+    --color-surface-container: rgb(30 32 37);
+    --color-surface-container-high: rgb(40 42 47);
+    --color-surface-container-highest: rgb(51 53 58);
+
+    /* Error */
+    --color-on-error: rgb(105 0 5);
+    /* Text Colors */
+    --color-on-primary: rgb(11 48 95);
+    --color-on-secondary: rgb(40 49 65);
+    --color-on-background: rgb(226 226 233);
+    --color-on-surface: rgb(226 226 233);
+    --color-on-tertiary: rgb(63 40 68);
+    --color-on-tertiary-container: rgb(250 216 253);
+    --color-on-secondary-container: rgb(218 226 249);
+    --color-on-primary-container: rgb(215 227 255);
+    --color-on-surface-variant: rgb(196 198 208);
+
+    /* Border & Shadow */
+    --color-border: #333333;
+    --color-shadow: rgba(0, 0, 0, 0.5);
+
+    /* Hover / Active states */
+    --color-hover: #448AFF;
+    --color-focus: #82B1FF;
+    /** Translucent overlay colors */
+    --color-overlay-container: rgba(255, 255, 255, 0.06);
+}
+/* Dark Theme */
