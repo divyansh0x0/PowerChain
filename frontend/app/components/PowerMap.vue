@@ -7,16 +7,18 @@ const {theme, setTheme} = useThemeManager();
 interface PowerData{
   latitude: number;
   longitude:number;
+  currently_powered: boolean;
   power_availability:number;
   number_of_power_cuts:number;
   number_of_complaints:number;
+  avg_time_of_daily_power:number;
 }
 function getRandomCoordinateInHimachal() : [number, number] {
   // Bounding box for Himachal Pradesh
-  const minLat = 20.0;
-  const maxLat = 25.5;
-  const minLng = 76.0;
-  const maxLng = 82.0;
+  const minLat = 18.0;
+  const maxLat = 28.5;
+  const minLng = 74.0;
+  const maxLng = 81.0;
 
 
   // Generate random latitude and longitude
@@ -33,17 +35,20 @@ const generateRandomPowerData = (count: number): PowerData[] => {
     const randomPoint = getRandomCoordinateInHimachal();
     const lat = randomPoint[0];
     const lng = randomPoint[1];
+    const avg_time_of_daily_power = Math.floor(Math.random() * 24);
     data.push({
       latitude: lat,
      longitude: lng,
-      power_availability: Math.round(Math.random() * 100),
-      number_of_power_cuts: Math.floor(Math.random() * 10),
+      currently_powered: Math.round(Math.random()) === 1,
+      number_of_power_cuts: 2+ Math.floor(Math.random() * 10),
       number_of_complaints: Math.floor(Math.random() * 5),
+      avg_time_of_daily_power:avg_time_of_daily_power ,
+      power_availability:Math.floor(avg_time_of_daily_power/24 * 100),
     });
   }
   return data;
 };
-const randomPowerData = generateRandomPowerData(100);
+const randomPowerData = generateRandomPowerData(150);
 onMounted(async () => {
   const L = await import('leaflet');
   await import('leaflet/dist/leaflet.css');
@@ -105,18 +110,31 @@ onMounted(async () => {
   map.fitBounds(indiaLayer.getBounds());
 
   randomPowerData.forEach((point) => {
+    let point_color = "";
+    if(point.power_availability > 80){
+      point_color = "#00ff00";
+    }
+    else if(point.power_availability > 50){
+      point_color = "#ffc800";
+    }
+    else{
+      point_color = "#ff0000";
+    }
     L.circleMarker([point.latitude, point.longitude], {
       radius: 6,
-      color: 'red',
-      fillColor: 'red',
-      fillOpacity: 0.8,
+      color: point_color,
+      fillColor: point_color,
+      fillOpacity: 0.5,
+      stroke:false,
     })
         .addTo(map)
         .bindPopup(
             `
+        <b>Currently Powered:</b> ${point.currently_powered}<br/>
         <b>Power Availability:</b> ${point.power_availability}%<br/>
         <b>Power Cuts:</b> ${point.number_of_power_cuts}<br/>
-        <b>Complaints:</b> ${point.number_of_complaints}
+        <b>Complaints:</b> ${point.number_of_complaints}<br/>
+        <b>Power availability time:</b> ${point.avg_time_of_daily_power}hr
       `
         );
   });
