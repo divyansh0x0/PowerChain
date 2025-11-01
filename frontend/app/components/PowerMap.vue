@@ -126,7 +126,7 @@ onMounted(async () => {
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
-    <h3>Ampere Power Tracker</h3>
+    <h3>Decentralized Power Tracker</h3>
   </div>
 </template>
 
