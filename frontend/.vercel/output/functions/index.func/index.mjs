@@ -5,9 +5,6 @@ import 'node:events';
 import 'node:buffer';
 import 'node:fs';
 import 'node:path';
-import 'better-sqlite3';
-import 'node:url';
-import 'ipx';
 import 'node:crypto';
 
 const nitroApp = useNitroApp();

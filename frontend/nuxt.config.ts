@@ -20,10 +20,4 @@ export default defineNuxtConfig({
     "~/assets/styles/theme.css",
 
   ],
-  modules: [
-    '@nuxt/content',
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxt/scripts',
-  ],
 })

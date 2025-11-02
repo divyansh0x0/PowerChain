@@ -1,0 +1,8 @@
+const complaint_vue_vue_type_style_index_0_scoped_b0691757_lang = "main[data-v-b0691757]{align-items:center;display:flex;height:100vh;justify-content:center;padding:5%}.complaint-container[data-v-b0691757]{background-color:var(--color-surface-container-low);border-radius:var(--border-radius);box-shadow:0 4px 16px #0000001a;max-width:600px;padding:var(--padding-lg);width:100%}.title[data-v-b0691757]{color:var(--color-on-surface);font-size:1.5rem;font-weight:600;margin-bottom:1.5rem;text-align:center}.complaint-form[data-v-b0691757]{gap:1rem}.complaint-form[data-v-b0691757],.form-group[data-v-b0691757]{display:flex;flex-direction:column}.form-group label[data-v-b0691757]{color:var(--color-on-surface-variant);font-weight:500;margin-bottom:.5rem}.form-group input[data-v-b0691757],.form-group textarea[data-v-b0691757]{background-color:var(--color-surface-container);border:1px solid var(--color-outline-variant);border-radius:var(--border-radius-sm);color:var(--color-on-surface);font-size:1rem;outline:none;padding:.75rem;transition:border-color .2s ease}.form-group input[data-v-b0691757]:focus,.form-group textarea[data-v-b0691757]:focus{border-color:var(--color-primary)}.submit-btn[data-v-b0691757]{background-color:var(--color-primary);border:none;border-radius:var(--border-radius);color:var(--color-on-primary);cursor:pointer;font-weight:600;padding:.75rem 1rem;transition:background-color .2s ease}.submit-btn[data-v-b0691757]:hover{background-color:var(--color-primary-container)}";
+
+const complaintStyles_DB5YTfMM = [
+  complaint_vue_vue_type_style_index_0_scoped_b0691757_lang
+];
+
+export { complaintStyles_DB5YTfMM as default };
+//# sourceMappingURL=complaint-styles.DB5YTfMM.mjs.map
