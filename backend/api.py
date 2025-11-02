@@ -125,15 +125,12 @@ def serialize_doc(doc):
     doc["_id"] = str(doc["_id"])
     return doc
 
-
 @api.get("/power-data/")
 def get_power_data(
         txid: str | None = Query(None),
         iotid: str | None = Query(None),
         pincode: str | None = Query(None),
 ):
-    if collection.count_documents({}) == 0:
-        return {"count": 0, "data": []}
     query = {}
     if txid:
         query["transaction_id"] = txid
@@ -142,12 +139,48 @@ def get_power_data(
     if pincode:
         query["power_data.pincode"] = int(pincode)
 
-    docs = list(collection.find(query))
+    pipeline = [
+        {"$match": query},
+        {"$sort": {"power_data.timestamp": -1}},
+        {"$group": {
+            "_id": "$power_data.iot_id",
+            "latest": {"$first": "$$ROOT"}
+        }},
+        {"$replaceRoot": {"newRoot": "$latest"}}
+    ]
+
+    docs = list(collection.aggregate(pipeline))
 
     if not docs:
         raise HTTPException(status_code=404, detail="No matching data found")
 
     return {
-        "count": collection.count_documents(query),
+        "count": len(docs),
         "data": [serialize_doc(d) for d in docs]
     }
+#
+# @api.get("/power-data/")
+# def get_power_data(
+#         txid: str | None = Query(None),
+#         iotid: str | None = Query(None),
+#         pincode: str | None = Query(None),
+# ):
+#     if collection.count_documents({}) == 0:
+#         return {"count": 0, "data": []}
+#     query = {}
+#     if txid:
+#         query["transaction_id"] = txid
+#     if iotid:
+#         query["power_data.iot_id"] = iotid
+#     if pincode:
+#         query["power_data.pincode"] = int(pincode)
+#
+#     docs = list(collection.find(query))
+#
+#     if not docs:
+#         raise HTTPException(status_code=404, detail="No matching data found")
+#
+#     return {
+#         "count": collection.count_documents(query),
+#         "data": [serialize_doc(d) for d in docs]
+#     }
