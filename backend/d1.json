@@ -1,0 +1,73 @@
+{
+  'count': 4,
+  'data': [
+    {
+      '_id': '6906d4646bf2e86f0fca32b1',
+      'power_data': {
+        'iot_id': 'IOT-3672',
+        'recorded_at': '2025-11-02T09:17:46.994000',
+        'latitude': 12.12,
+        'longitude': 76.68,
+        'pincode': 45101,
+        'is_power_available': False,
+        'avg_power_availability': 0.6599999999999999,
+        'avg_power_cuts_count': 116,
+        'complaints_count': 91
+      },
+      'transaction_id': '0xc3ab5e87fc5f809bda6a95457eb7eb22e76bb5052fe06412e64cbb0d70eeadec',
+      'blockchain_hash': '0xea1b79742f14048c208957cee3d48c5c490414bdf78e9e7beb76b4cb68828de8',
+      'verified_on_chain_at': '2025-11-02T09:17:48.156000'
+    },
+    {
+      '_id': '6906d4626bf2e86f0fca32b0',
+      'power_data': {
+        'iot_id': 'IOT-3097',
+        'recorded_at': '2025-11-02T09:17:44.253000',
+        'latitude': 26.907524,
+        'longitude': 75.739639,
+        'pincode': 47981,
+        'is_power_available': False,
+        'avg_power_availability': 0.99,
+        'avg_power_cuts_count': 98,
+        'complaints_count': 58
+      },
+      'transaction_id': '0xe272cc5e0d58bb0673e51fb386f09f5fecabd073f3a87d6e89f7aa28277f416e',
+      'blockchain_hash': '0xe3beae2d2c9fbacf1fdf4758fcf1f11d48fc82746fac18f72b412472b04f764f',
+      'verified_on_chain_at': '2025-11-02T09:17:46.927000'
+    },
+    {
+      '_id': '6906d4666bf2e86f0fca32b3',
+      'power_data': {
+        'iot_id': 'IOT-4541',
+        'recorded_at': '2025-11-02T09:17:49.452000',
+        'latitude': 16.994444,
+        'longitude': 73.300003,
+        'pincode': 21157,
+        'is_power_available': False,
+        'avg_power_availability': 0.94,
+        'avg_power_cuts_count': 381,
+        'complaints_count': 69
+      },
+      'transaction_id': '0x6c7cede3482969667c298b86eb7fedb93bd4e575de52b5aefc0c941cc1ef0e02',
+      'blockchain_hash': '0xa5b2b5e8327527127e52add5f824fdb5fe6a4c095620817393c4f8eea6d576d4',
+      'verified_on_chain_at': '2025-11-02T09:17:50.715000'
+    },
+    {
+      '_id': '6906d4656bf2e86f0fca32b2',
+      'power_data': {
+        'iot_id': 'IOT-3530',
+        'recorded_at': '2025-11-02T09:17:48.218000',
+        'latitude': 24.879999,
+        'longitude': 74.629997,
+        'pincode': 80980,
+        'is_power_available': False,
+        'avg_power_availability': 0.61,
+        'avg_power_cuts_count': 529,
+        'complaints_count': 120
+      },
+      'transaction_id': '0xaac07f6ce66ec95c37ff59468fcc3f9d8ce1a1609cec5b047fe469a2304049f2',
+      'blockchain_hash': '0x125a963c673c99a1ac308e7036275cf31840813abb0efb41e9e4bbc70135612f',
+      'verified_on_chain_at': '2025-11-02T09:17:49.384000'
+    }
+  ]
+}

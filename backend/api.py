@@ -50,7 +50,7 @@ else:
 
 class PowerData(BaseModel):
     iot_id: str
-    recorded_at: str
+    recorded_at: datetime
     latitude: float
     longitude: float
     pincode: int
@@ -62,16 +62,20 @@ class PowerData(BaseModel):
 
 @dataclass
 class TransactionData:
-    power_data: str
+    power_data: dict
     transaction_id: str
     blockchain_hash: str
-    verified_on_chain_at: str
+    verified_on_chain_at: datetime
 
 
 def make_transaction(power_data: PowerData) -> TransactionData:
     # 1️⃣ Create SHA-256 hash of the power data
     power_data_dict = power_data.model_dump()
-    data_str = json.dumps(power_data_dict, sort_keys=True)
+
+    hashable_dict = power_data_dict.copy()
+    hashable_dict["recorded_at"] = hashable_dict["recorded_at"].isoformat()
+
+    data_str = json.dumps(hashable_dict, sort_keys=True)
     data_hash = hashlib.sha256(data_str.encode()).hexdigest()
     data_hex = "0x" + data_hash
     print(data_str)
@@ -98,10 +102,10 @@ def make_transaction(power_data: PowerData) -> TransactionData:
     #
     # 4️⃣ Return TransactionData object
     return TransactionData(
-        power_data=data_str,
+        power_data=power_data_dict,
         transaction_id=tx_hash_str,
         blockchain_hash=data_hex,
-        verified_on_chain_at=str(datetime.now().isoformat())
+        verified_on_chain_at=datetime.now()
     )
 
 
@@ -126,28 +130,30 @@ def serialize_doc(doc):
     return doc
 
 @api.get("/power-data/")
-def get_power_data(
-        txid: str | None = Query(None),
-        iotid: str | None = Query(None),
-        pincode: str | None = Query(None),
-):
-    query = {}
-    if txid:
-        query["transaction_id"] = txid
-    if iotid:
-        query["power_data.iot_id"] = iotid
-    if pincode:
-        query["power_data.pincode"] = int(pincode)
-
-    pipeline = [
-        {"$match": query},
-        {"$sort": {"power_data.timestamp": -1}},
-        {"$group": {
-            "_id": "$power_data.iot_id",
-            "latest": {"$first": "$$ROOT"}
-        }},
-        {"$replaceRoot": {"newRoot": "$latest"}}
-    ]
+def get_power_data():
+    pipeline =[
+    {
+        '$sort': {
+            'power_data.iot_id': 1,
+            'verified_on_chain_at': -1
+        }
+    }, {
+        '$group': {
+            '_id': '$power_data.iot_id',
+            'latest': {
+                '$first': '$$ROOT'
+            }
+        }
+    }, {
+        '$replaceRoot': {
+            'newRoot': '$latest'
+        }
+    }, {
+        '$sort': {
+            'power_data.iot_id': 1
+        }
+    }
+]
 
     docs = list(collection.aggregate(pipeline))
 
